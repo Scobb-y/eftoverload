@@ -19,4 +19,9 @@ const btn = new ButtonBuilder()
 
 client.login(process.env.DISCORD_TOKEN);
 
-client.on("")
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+  if (interaction.commandName === 'ammochart') {
+    await interaction.reply('Seen');
+  }
+})
