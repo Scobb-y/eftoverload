@@ -10,12 +10,18 @@ export default {
         .setName('caliber')
         .setDescription('Example: 5.56x45')
         .setRequired(true)
+    ).addStringOption(option =>
+      option
+      .setName('type')
+      .setDescription('Example: BS, BP, 7N40')
+      .setRequired(false)
     ),
 
   async execute(interaction) {
     await interaction.deferReply();
 
     const caliberQuery = interaction.options.getString('caliber');
+    const typeQuery = interaction.options.getString('type');
 
     const query = `
       {
@@ -42,13 +48,15 @@ export default {
 
       const match = ammoList.filter(a =>
         a.item.name.toLowerCase().includes(caliberQuery.toLowerCase())
+        &&
+        a.item.name.toLowerCase().includes(typeQuery.toLowerCase())
       );
 
       if (match.length === 0) {
         return interaction.editReply(`No matching ammo types for **${caliberQuery}**`);
       }
 
-      let output = `**Ammo for caliber ${caliberQuery}:**\n\n`;
+      let output = `**Ammo matching caliber ${caliberQuery} ${typeQuery}:**\n\n`;
 
       for (const a of match) {
         output += `• **${a.item.name}** — Damage: ${a.damage}, Pen: ${a.penetrationPower}\n`;
