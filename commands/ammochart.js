@@ -46,17 +46,28 @@ export default {
       const data = await response.json();
       const ammoList = data.data.ammo;
 
-      const match = ammoList.filter(a =>
-        a.item.name.toLowerCase().includes(caliberQuery.toLowerCase())
-        &&
-        a.item.name.toLowerCase().includes(typeQuery.toLowerCase())
-      );
+      const match = ammoList.filter(a => {
+        const name = a?.item?.name?.toLowerCase() ?? "";
+
+        const caliberMatch = name.includes(caliberQuery.toLowerCase());
+        const typeMatch = typeQuery
+          ? name.includes(typeQuery.toLowerCase())
+          : true;
+
+        return caliberMatch && typeMatch;
+      });
+
+      
+      match.sort((a,b) => b.penetrationPower - a.penetrationPower);
 
       if (match.length === 0) {
         return interaction.editReply(`No matching ammo types for **${caliberQuery}**`);
       }
 
-      let output = `**Ammo matching caliber ${caliberQuery} ${typeQuery}:**\n\n`;
+      let queryOutput = `${caliberQuery} `;
+      if (typeQuery) { queryOutput += `${typeQuery}`; }
+
+      let output = `**Ammo matching caliber ${queryOutput}:**\n\n`;
 
       for (const a of match) {
         output += `• **${a.item.name}** — Damage: ${a.damage}, Pen: ${a.penetrationPower}\n`;
