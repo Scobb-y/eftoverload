@@ -29,6 +29,7 @@ export default {
           caliber
           damage
           penetrationPower
+          fragmentationChance
           item {
             name
           }
@@ -65,9 +66,9 @@ export default {
       }
 
       let table = "```";
-      table += "Name                 DMG   PEN\n";
+      table += "Name                 DMG   PEN   Frag %\n";
       table += match.map(a =>
-        `${a.item.name.slice(0,17).padEnd(20)} ${String(a.damage).padEnd(5)} ${a.penetrationPower}`
+        `${a.item.name.slice(0,17).padEnd(20)} ${String(a.damage).padEnd(5)} ${String(a.penetrationPower).padEnd(5)} ${a.fragmentationChance*100}`
       ).join("\n");
       table += "```";
 
