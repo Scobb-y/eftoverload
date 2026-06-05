@@ -64,16 +64,16 @@ export default {
         return interaction.editReply(`No matching ammo types for **${caliberQuery}**`);
       }
 
-      let queryOutput = `${caliberQuery} `;
-      if (typeQuery) { queryOutput += `${typeQuery}`; }
+      let table = "```";
+      table += "Name                 DMG   PEN\n";
+      table += match.map(a =>
+        `${a.item.name.slice(0,17).padEnd(20)} ${String(a.damage).padEnd(5)} ${a.penetrationPower}`
+      ).join("\n");
+      table += "```";
 
-      let output = `**Ammo matching caliber ${queryOutput}:**\n\n`;
+      await interaction.editReply(table);
 
-      for (const a of match) {
-        output += `• **${a.item.name}** — Damage: ${a.damage}, Pen: ${a.penetrationPower}\n`;
-      }
 
-      await interaction.editReply(output);
 
     } catch (error) {
       await interaction.editReply(`Encountered an unexpected error: ${error.message}`);
